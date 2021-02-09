@@ -1,0 +1,19 @@
+- hosts: awslinux
+  become: yes
+  tasks:
+    - name: ensure apache is at the latest version
+      yum:
+        name: httpd
+        state: latest
+      notify: 
+        - restart apache
+
+    - name: start httpd service
+      service:
+        name: httpd
+        state: started
+  handlers:
+    - name: restart apache
+      service: 
+        name: httpd
+        state: restarted

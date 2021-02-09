@@ -1,0 +1,29 @@
+---
+- hosts: web-servers
+  become: yes
+  tasks:
+    - name: install httpd webserver on awslinux
+      yum:
+        name: httpd
+        state: present
+      when:
+        - ansible_distribution == "Amazon"
+    
+    - name: install apache2 webserver on ubuntu server
+      apt:
+        name: apache2
+        state: present
+      when:
+        - ansible_distribution == "Ubuntu"
+
+    - name: start service httpd
+      service:
+        name: httpd
+        state: started
+      when:
+        - ansible_distribution == "Amazon"
+    
+    - name: copy web content to webserver
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html
