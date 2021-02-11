@@ -1,0 +1,9 @@
+- name: test
+  hosts: ubuntu
+  become: yes
+  tasks: 
+    - name: test
+      command: touch test.txt
+    - lineinfile:
+        path: test.txt
+        line: 'test isi file disini'

@@ -1,0 +1,7 @@
+loopvar:
+  - label: nama
+    value: hisbu
+  - label: pekerjaan
+    value: devops
+  - label: alamat
+    value: bsd

@@ -1,0 +1,60 @@
+- hosts: web-servers #ubuntu & awslinux
+  become: yes
+  tasks:
+    - name: run apt update on ubuntu
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when:
+        - ansible_distribution == "Ubuntu"
+    
+    - name: install apache2 on ubuntu server
+      apt:
+        name: apache2
+        state: absent
+      when:
+        - ansible_distribution == "Ubuntu"
+     
+    
+    - name: install package tree on ubuntu
+      apt:
+        name: tree
+        state: absent
+      when:
+        - ansible_distribution == "Ubuntu"
+    
+    - name: install httpd on awslinux
+      yum:
+        name: httpd
+        state: absent
+      when:
+        - ansible_distribution == "Amazon"
+
+    - name: install package tree on awslinux
+      yum: 
+        name: tree
+        state: absent
+      when:
+        - ansible_distribution == "Amazon"
+    
+    - name: start service httpd on awslinux
+      service:
+        name: httpd
+        state: started
+      when:
+        - ansible_distribution == "Amazon"
+    
+    - name: enable port 80 on firewall awslinux
+      iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT 
+    
+    - name: copy index.html to webserver
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html
+
+    
+

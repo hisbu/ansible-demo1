@@ -1,0 +1,40 @@
+- name: manage webserver
+  hosts: web-servers
+  become: yes
+  vars:
+    package:
+      - app: nginx
+      - app: httpd
+        req: true
+      - app: tree
+        req: true
+  tasks:
+    - name: run apt update on ubuntu
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when:
+        - ansible_distribution == 'Ubuntu'
+
+    - name: install nginx and tree on ubuntu
+      apt: 
+        name: '{{ package }}'
+        state: present
+      when:
+        - ansible_distribution == 'Ubuntu'
+    
+    - name: install httpd and tree on awslinux
+      yum:
+        name: '{{ package }}'
+        state: present
+      when:
+        - ansible_distribution == 'Amazon'
+      #   - "{{ item.req }}" == true
+      # with_items:
+      #   - "{{ package }}"
+
+    
+    # - name: start service nginx
+    #   service:
+    #     name: nginx
+    #     state: started

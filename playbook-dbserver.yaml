@@ -1,0 +1,58 @@
+- name: db server managment
+  hosts: db-server
+  become: yes
+  # pre_tasks:
+  #   - name: Set discovered Ansible Python interpreter.
+  #     set_fact:
+  #       ansible_python_interpreter: "{{ ansible_facts.python.executable }}"
+  #     when: ansible_python_interpreter is not defined
+  tasks:
+    - name: run apt update ubuntu
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when:
+        - ansible_distribution == "Ubuntu"
+    
+    - name: install mysql server ubuntu
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - mysql-server
+        # - python-pymysql
+        - python3-pymysql
+        - python3-mysqldb
+        - python-apt
+        - python3-apt
+      when:
+        - ansible_distribution == "Ubuntu"
+    
+    - name: install mysql redhat 8
+      yum:
+        name: "@mysql"
+        state: present
+      when:
+        - ansible_distribution == "RedHat"
+
+    - name: instal pymysql
+      yum: 
+        name: python3-PyMySQL
+        state: present
+      when:
+        - ansible_distribution == "RedHat"
+
+    - name: start service mysql redhat
+      service:
+        name: mysqld
+        state: started
+      when:
+        - ansible_distribution == "RedHat"
+
+    - name: create database
+      mysql_db:
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: ansible_db
+        state: present
+      
+    

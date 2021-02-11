@@ -1,0 +1,32 @@
+- name: manage webserver
+  hosts: web-servers
+  become: yes
+  vars_files:
+    - variables.yaml
+  tasks:
+    - name: create file
+      command: touch data3.txt
+    
+    - name: isi file
+      lineinfile:
+        path: data3.txt
+        line: "{{ item.label }} : {{ item.value }}"
+      with_items:
+        - "{{ loopvar }}"
+      when:
+        - ansible_distribution == 'Ubuntu'
+
+    # - name: isi file
+    #   lineinfile:
+    #     path: data.txt
+    #     line: "nama : {{ nama }}"
+    
+    # - name: isi baris kedua
+    #   lineinfile:
+    #     path: data.txt
+    #     line: "pekerjaan: {{ pekerjaan }}"
+    
+    # - name: isi baris ketiga
+    #   lineinfile:
+    #     path: data.txt
+    #     line: "alamat: {{ alamat }}"

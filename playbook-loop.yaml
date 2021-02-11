@@ -1,0 +1,65 @@
+- name: playbook managment webserver
+  hosts: web-servers
+  become: yes
+  tasks:
+    # - name: create dir data, backup and app
+    #   command: mkdir '{{ item }}' 
+    #   loop:
+    #     - data
+    #     - backup
+    #     - app
+    
+    - name: create file
+      command: touch '{{ item.dir }}'/'{{item.file}}'
+      loop:
+        - dir: data
+          file: file_data.txt
+        - dir: backup
+          file: backup_file.txt
+    
+    - name: input line to file
+      lineinfile:
+        path: data/file_data.txt
+        line: "server1 ansible_host= {{ item }}"
+      loop:
+        - "182.23.24.3"
+        - "198.45.23.89"
+        - "172.88.90.76"
+
+    - name: update repo ubuntu
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when:
+        - ansible_distribution == 'Ubuntu'
+    
+    - name: install package apache2 and tree on ubuntu
+      apt:
+        name: '{{ item }}'
+        state: present
+      loop:
+        - apache2
+        - tree
+        - nmon
+      when:
+        - ansible_distribution == 'Ubuntu'
+      
+    - name: install packege httpd, tree and nmon on awslinux
+      yum:
+        name: '{{ item }}'
+        state: present
+      loop:
+        - httpd
+        - tree
+      when:
+        - ansible_distribution == "Amazon"
+    
+    - name: start service httpd
+      service:
+        name: httpd
+        state: started
+      when: 
+        - ansible_distribution == "Amazon"    
+    
+
+    
