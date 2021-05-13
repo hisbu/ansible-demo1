@@ -1,0 +1,25 @@
+- name: manage db server
+  hosts: db-server
+  become: yes
+  vars_files:
+    - variables.yaml
+  roles:
+    - geerlingguy.mysql
+    - geerlingguy.phpmyadmin
+
+  tasks:
+    - name: create database
+      mysql_db:
+        name: ansible_db
+        state: present
+    
+    - name: upload database file dump to remote db_server
+      copy:
+        src: databasefile2.sql
+        dest: /tmp/databasefile2.sql
+
+    - name: import database to ansible_db
+      mysql_db:
+        name: ansible_db
+        state: import
+        target: /tmp/databasefile2.sql

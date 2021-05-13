@@ -1,0 +1,13 @@
+
+- hosts: ubuntu3
+  become: yes
+  vars:
+          mypassword: "password"
+  tasks:
+    - name: Add the user 'johnd' with a specific uid and a primary group of 'admin'
+      user:
+        name: johnd
+        comment: John Doe
+        group: telkomsel
+        shell: /bin/bash
+        password: "{{ mypassword | password_hash('sha512') }}"

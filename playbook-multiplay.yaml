@@ -1,0 +1,42 @@
+---
+- name: install nginx ubuntu
+  hosts: ubuntu2
+  become: yes
+  roles:
+    - nginxinc.nginx
+  
+  tasks:
+    - name: clean html dir
+      command: rm -rf /usr/share/nginx/html/
+
+    - name: clone template to remote server
+      git:
+        repo: https://github.com/hisbu/template2.git
+        dest: /usr/share/nginx/html/
+        clone: yes
+
+- name: install httpd redhat
+  hosts: redhat
+  become: yes
+  roles:
+    - robertdebock.httpd
+  
+  tasks:
+    - name: clean html dir
+      command: rm -rf /var/www/html/
+    
+    - name: install git
+      yum:
+        name: git
+        state: present
+
+    - name: clone web template to remote server
+      git:
+        repo: https://github.com/hisbu/template2.git
+        dest: /var/www/html/
+        clone: yes
+
+    - name: start service httpd
+      service:
+        name: httpd
+        state: started

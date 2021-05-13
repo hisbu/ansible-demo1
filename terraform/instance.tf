@@ -39,23 +39,28 @@ resource "aws_instance" "server-redhat" {
 # }
 
 
-resource "aws_instance" "server-awslinux-2" {
-  ami                     = var.AWS_AMIS_AWSLINUX[var.AWS_REGION]
-  instance_type           = var.AWS_INSTANCE_TYPE
-  vpc_security_group_ids  = ["sg-0b7bb20f90aa0c30f","sg-0634805f2592b1a8d"]
-  key_name                = "jcde-key"
-  tags = {
-    Name = "server-awslinux-2"
-  }
-}
+# resource "aws_instance" "server-awslinux-2" {
+#   ami                     = var.AWS_AMIS_AWSLINUX[var.AWS_REGION]
+#   instance_type           = var.AWS_INSTANCE_TYPE
+#   vpc_security_group_ids  = ["sg-0b7bb20f90aa0c30f","sg-0634805f2592b1a8d"]
+#   key_name                = "jcde-key"
+#   tags = {
+#     Name = "server-awslinux-2"
+#   }
+# }
 
 output "ip-ubuntu" {
   # value = [aws_instance.server-ubuntu.public_ip, aws_instance.server-ubuntu-2.public_ip]
   value = [aws_instance.server-ubuntu-2.public_ip]
 }
 
-output "ip_awslinux" {
-  # value = [aws_instance.server-awslinux.public_ip, aws_instance.server-awslinux-2.public_ip]
-  value = [aws_instance.server-awslinux-2.public_ip]
+output "ip-redhat" {
+  # value = [aws_instance.server-ubuntu.public_ip, aws_instance.server-ubuntu-2.public_ip]
+  value = [aws_instance.server-redhat.public_ip]
 }
+
+# output "ip_awslinux" {
+#   # value = [aws_instance.server-awslinux.public_ip, aws_instance.server-awslinux-2.public_ip]
+#   value = [aws_instance.server-awslinux-2.public_ip]
+# }
 

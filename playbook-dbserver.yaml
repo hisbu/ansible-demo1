@@ -48,6 +48,15 @@
         state: started
       when:
         - ansible_distribution == "RedHat"
+        
+    - name: Create database user with password and all database privileges and 'WITH GRANT OPTION'
+      mysql_user:
+        name: ec2-user
+        password: password
+        priv: '*.*:ALL,GRANT'
+        state: present
+      when:
+        - ansible_distribution == "RedHat"
 
     - name: create database
       mysql_db:

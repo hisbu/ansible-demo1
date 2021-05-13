@@ -5,3 +5,6 @@ loopvar:
     value: devops
   - label: alamat
     value: bsd
+
+phpmyadmin_mysql_user: root
+phpmyadmin_mysql_password: root
